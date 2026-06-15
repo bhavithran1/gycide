@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { ArrowRight, BookOpen, Microscope } from 'lucide-react'
+import { ArrowRight, BookOpen } from 'lucide-react'
 
 export default function Hero() {
   return (
