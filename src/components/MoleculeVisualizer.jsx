@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { Cpu, ChevronRight, Zap, Shield, AlertTriangle, CheckCircle } from 'lucide-react'
+import { Activity, CheckCircle, Cpu, FlaskConical, GitCompare, Layers, Microscope, Shield, Zap } from 'lucide-react'
 
 const PESTICIDES = [
   {
@@ -12,12 +12,12 @@ const PESTICIDES = [
     toxicity: 92,
     selectivity: 8,
     persistence: 78,
-    bindingTarget: 'Photosystem I (PSI)',
-    mechanism: 'Electron diversion from PSI generates reactive oxygen species, causing oxidative damage to plant cells. In mammals, identical mechanism attacks lung epithelium.',
-    aiSuggestion: 'Replace bipyridinium core with triazine scaffold — maintains PSI electron capture in chloroplasts while steric bulk blocks binding in mammalian mitochondria.',
+    bindingTarget: 'Photosystem I',
+    mechanism: 'Electron diversion from Photosystem I generates reactive oxygen species. The same oxidative pathway can damage mammalian lung tissue, which is why small structural changes matter.',
+    aiSuggestion: 'Replace the bipyridinium core with a triazine-like scaffold. The candidate keeps chloroplast electron capture while reducing the fit against mammalian mitochondrial sites.',
     improvedToxicity: 31,
     improvedSelectivity: 74,
-    color: '#ff4d6d',
+    color: '#b84242',
     atoms: generateAtoms('paraquat'),
   },
   {
@@ -30,12 +30,12 @@ const PESTICIDES = [
     toxicity: 78,
     selectivity: 22,
     persistence: 65,
-    bindingTarget: 'Acetylcholinesterase (AChE)',
-    mechanism: 'Organophosphate binds AChE active site serine residue, preventing hydrolysis of acetylcholine. Causes continuous nerve stimulation. Non-selective across pest and vertebrate nervous systems.',
-    aiSuggestion: 'Introduce a bulky aromatic substituent at the P=S group. Insect AChE gorge (4.5Å) accommodates it; mammalian AChE gorge (5.9Å) causes allosteric clash, reducing off-target binding by ~65%.',
+    bindingTarget: 'Acetylcholinesterase',
+    mechanism: 'The organophosphate group binds the AChE active site and prevents acetylcholine breakdown. Selectivity is difficult because vertebrate and insect nervous systems share similar chemistry.',
+    aiSuggestion: 'Add steric bulk near the P=S group. The insect pocket can tolerate the added volume, while mammalian AChE produces a poorer fit and lower predicted off-target binding.',
     improvedToxicity: 28,
     improvedSelectivity: 68,
-    color: '#ffb347',
+    color: '#a8562a',
     atoms: generateAtoms('chlorpyrifos'),
   },
   {
@@ -44,16 +44,16 @@ const PESTICIDES = [
     formula: 'C₃H₈NO₅P',
     class: 'Herbicide',
     status: 'ACTIVE',
-    statusColor: 'tag-orange',
+    statusColor: 'tag-gold',
     toxicity: 45,
     selectivity: 55,
     persistence: 50,
-    bindingTarget: 'EPSPS Enzyme',
-    mechanism: 'Inhibits 5-enolpyruvylshikimate-3-phosphate synthase (EPSPS), blocking aromatic amino acid synthesis. The shikimate pathway is absent in animals but present in gut microbiome bacteria.',
-    aiSuggestion: 'Fluorine substitution at C2 increases EPSPS binding 3×, allowing 60% dose reduction while achieving equivalent weed control. Lower dose = lower runoff and microbiome disruption.',
+    bindingTarget: 'EPSPS enzyme',
+    mechanism: 'EPSPS inhibition blocks aromatic amino acid synthesis in plants. The pathway is absent in animals, but environmental load and microbiome effects still need scrutiny.',
+    aiSuggestion: 'A C2 fluorine substitution improves EPSPS affinity, allowing a lower field dose for the same weed-control effect and reducing runoff pressure.',
     improvedToxicity: 18,
     improvedSelectivity: 82,
-    color: '#4fc3f7',
+    color: '#2e6288',
     atoms: generateAtoms('glyphosate'),
   },
   {
@@ -62,16 +62,16 @@ const PESTICIDES = [
     formula: 'C₂₂H₁₉Cl₂NO₃',
     class: 'Insecticide',
     status: 'ACTIVE',
-    statusColor: 'tag-orange',
+    statusColor: 'tag-gold',
     toxicity: 55,
     selectivity: 38,
     persistence: 44,
-    bindingTarget: 'Voltage-gated Na⁺ channel',
-    mechanism: 'Binds Nav1 channel open state, prolonging depolarization. Aquatic toxicity is extreme — highly toxic to fish at ppb concentrations due to lipophilicity and bioaccumulation in gill tissue.',
-    aiSuggestion: 'Replace cyclopropane ring with oxetane bioisostere. Reduces logP from 6.6 to 4.1, cutting aquatic bioaccumulation 15× while retaining insect channel affinity through identical pharmacophore geometry.',
+    bindingTarget: 'Voltage-gated sodium channel',
+    mechanism: 'The molecule prolongs sodium-channel opening and disrupts nerve signaling. Aquatic organisms are especially vulnerable because lipophilic compounds concentrate in gill tissue.',
+    aiSuggestion: 'Replace the cyclopropane ring with an oxetane bioisostere. The geometry stays useful for insect-channel binding while lowering predicted aquatic bioaccumulation.',
     improvedToxicity: 22,
     improvedSelectivity: 71,
-    color: '#00e87a',
+    color: '#1d7350',
     atoms: generateAtoms('cypermethrin'),
   },
   {
@@ -84,13 +84,36 @@ const PESTICIDES = [
     toxicity: 38,
     selectivity: 48,
     persistence: 30,
-    bindingTarget: 'Fungal Respiratory Chain',
-    mechanism: 'Dithiocarbamate generates isothiocyanate, which disrupts multiple fungal enzyme systems simultaneously. ETU metabolite is a suspected thyroid disruptor and teratogen in mammals.',
-    aiSuggestion: 'Chelate zinc with pyridine-carboxylate ligand instead of dithiocarbamate — eliminates ETU generation pathway entirely. GNN model predicts equivalent antifungal spectrum with 88% lower thyroid disruption potential.',
+    bindingTarget: 'Fungal respiratory chain',
+    mechanism: 'Dithiocarbamate chemistry disrupts fungal enzyme systems, but the ETU metabolite is associated with thyroid and developmental risk signals.',
+    aiSuggestion: 'Use a pyridine-carboxylate zinc chelate rather than a dithiocarbamate pathway. The candidate removes the ETU route while preserving broad antifungal behavior.',
     improvedToxicity: 14,
     improvedSelectivity: 77,
-    color: '#a78bfa',
+    color: '#6b65a7',
     atoms: generateAtoms('mancozeb'),
+  },
+]
+
+const FLOW_STEPS = [
+  {
+    icon: <FlaskConical size={16} />,
+    title: 'Compound input',
+    desc: 'Atoms and bonds become a graph representation.',
+  },
+  {
+    icon: <Microscope size={16} />,
+    title: 'Target fit',
+    desc: 'The model compares pest and off-target receptor pockets.',
+  },
+  {
+    icon: <Layers size={16} />,
+    title: 'Scaffold search',
+    desc: 'Functional groups are adjusted under safety constraints.',
+  },
+  {
+    icon: <GitCompare size={16} />,
+    title: 'Candidate comparison',
+    desc: 'Risk, selectivity, and persistence are scored side by side.',
   },
 ]
 
@@ -168,55 +191,125 @@ function generateAtoms(id) {
   return configs[id] || configs.paraquat
 }
 
-function MoleculeCanvas({ pesticide, showImproved, animating }) {
+function MoleculeCanvas({ pesticide, phase, activeStep }) {
   const canvasRef = useRef(null)
-  const animRef = useRef(null)
-  const progressRef = useRef(0)
 
   useEffect(() => {
     const canvas = canvasRef.current
     if (!canvas) return
     const ctx = canvas.getContext('2d')
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let width = 0
+    let height = 0
     let frame = 0
+    let raf
 
-    const draw = () => {
-      const W = canvas.width, H = canvas.height
-      ctx.clearRect(0, 0, W, H)
+    const readTheme = () => {
+      const style = getComputedStyle(document.documentElement)
+      return {
+        surface: style.getPropertyValue('--surface').trim(),
+        bgStrong: style.getPropertyValue('--bg-strong').trim(),
+        line: style.getPropertyValue('--line-strong').trim(),
+        text: style.getPropertyValue('--text-primary').trim(),
+        muted: style.getPropertyValue('--text-muted').trim(),
+        accent: style.getPropertyValue('--accent').trim(),
+        blue: style.getPropertyValue('--blue').trim(),
+      }
+    }
 
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect()
+      const dpr = Math.min(window.devicePixelRatio || 1, 2)
+      width = rect.width
+      height = rect.height
+      canvas.width = Math.max(1, Math.floor(rect.width * dpr))
+      canvas.height = Math.max(1, Math.floor(rect.height * dpr))
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0)
+    }
+
+    const drawReceptor = (palette, t) => {
+      const cx = width * 0.73
+      const cy = height * 0.5
+
+      ctx.save()
+      ctx.strokeStyle = phase === 'optimized' ? palette.accent : palette.blue
+      ctx.lineWidth = 2
+      ctx.globalAlpha = phase === 'idle' ? 0.48 : 0.72
+      for (let ring = 0; ring < 4; ring += 1) {
+        ctx.beginPath()
+        for (let i = 0; i <= 80; i += 1) {
+          const a = (i / 80) * Math.PI * 2
+          const wobble = Math.sin(a * 3 + t + ring) * 8
+          const rx = 70 + ring * 22 + wobble
+          const ry = 46 + ring * 15 + Math.cos(a * 2 + t) * 6
+          const x = cx + Math.cos(a) * rx
+          const y = cy + Math.sin(a) * ry
+          if (i === 0) ctx.moveTo(x, y)
+          else ctx.lineTo(x, y)
+        }
+        ctx.stroke()
+      }
+
+      ctx.globalAlpha = 1
+      ctx.fillStyle = palette.surface
+      ctx.strokeStyle = palette.line
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.ellipse(cx, cy, 54, 36, 0.15, 0, Math.PI * 2)
+      ctx.fill()
+      ctx.stroke()
+
+      ctx.fillStyle = palette.muted
+      ctx.font = '11px SFMono-Regular, Consolas, monospace'
+      ctx.textAlign = 'center'
+      ctx.fillText('target pocket', cx, cy + 4)
+      ctx.restore()
+    }
+
+    const drawMolecule = (palette, t) => {
       const { atoms, bonds, doubleBonds } = pesticide.atoms
-      const col = pesticide.color
+      const xs = atoms.map(atom => atom.x)
+      const ys = atoms.map(atom => atom.y)
+      const minX = Math.min(...xs)
+      const maxX = Math.max(...xs)
+      const minY = Math.min(...ys)
+      const maxY = Math.max(...ys)
+      const scale = Math.min((width * 0.48) / (maxX - minX || 1), (height * 0.68) / (maxY - minY || 1), 1.34)
+      const targetX = phase === 'optimized' ? width * 0.45 : width * 0.36
+      const offX = targetX - ((minX + maxX) / 2) * scale
+      const offY = height * 0.5 - ((minY + maxY) / 2) * scale
+      const pulse = 0.5 + 0.5 * Math.sin(t * 1.8)
+      const color = phase === 'optimized' ? palette.accent : pesticide.color
 
-      // glow pulse
-      const pulse = 0.5 + 0.5 * Math.sin(frame * 0.04)
-      frame++
+      const tx = (x, i = 0) => x * scale + offX + (phase === 'analyzing' ? Math.sin(t * 2 + i) * 3 : 0)
+      const ty = (y, i = 0) => y * scale + offY + (phase === 'analyzing' ? Math.cos(t * 2 + i) * 2 : 0)
 
-      // Scale/center atoms to canvas
-      const xs = atoms.map(a => a.x), ys = atoms.map(a => a.y)
-      const minX = Math.min(...xs), maxX = Math.max(...xs)
-      const minY = Math.min(...ys), maxY = Math.max(...ys)
-      const scaleX = (W - 80) / (maxX - minX || 1)
-      const scaleY = (H - 80) / (maxY - minY || 1)
-      const scale = Math.min(scaleX, scaleY, 1.4)
-      const offX = (W - (maxX - minX) * scale) / 2 - minX * scale
-      const offY = (H - (maxY - minY) * scale) / 2 - minY * scale
+      ctx.save()
+      if (phase !== 'idle') {
+        ctx.strokeStyle = phase === 'optimized' ? 'rgba(29,115,80,0.42)' : 'rgba(46,98,136,0.34)'
+        ctx.setLineDash([8, 10])
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.moveTo(width * 0.48, height * 0.5)
+        ctx.bezierCurveTo(width * 0.55, height * 0.34, width * 0.66, height * 0.34, width * 0.73, height * 0.5)
+        ctx.stroke()
+        ctx.setLineDash([])
+      }
 
-      const tx = x => x * scale + offX
-      const ty = y => y * scale + offY
-
-      // Draw bonds
       bonds.forEach(([i, j]) => {
         const isDbl = doubleBonds.some(([a, b]) => (a === i && b === j) || (a === j && b === i))
-        const x1 = tx(atoms[i].x), y1 = ty(atoms[i].y)
-        const x2 = tx(atoms[j].x), y2 = ty(atoms[j].y)
-        const dx = x2 - x1, dy = y2 - y1
-        const len = Math.sqrt(dx * dx + dy * dy)
-        const nx = -dy / len * 3, ny = dx / len * 3
+        const x1 = tx(atoms[i].x, i)
+        const y1 = ty(atoms[i].y, i)
+        const x2 = tx(atoms[j].x, j)
+        const y2 = ty(atoms[j].y, j)
+        const dx = x2 - x1
+        const dy = y2 - y1
+        const len = Math.max(Math.sqrt(dx * dx + dy * dy), 1)
+        const nx = -dy / len * 3
+        const ny = dx / len * 3
 
-        ctx.strokeStyle = showImproved
-          ? `rgba(0,232,122,${0.5 + pulse * 0.2})`
-          : `rgba(255,255,255,0.15)`
+        ctx.strokeStyle = phase === 'optimized' ? 'rgba(29,115,80,0.72)' : 'rgba(82,102,91,0.52)'
         ctx.lineWidth = isDbl ? 1.5 : 2
-
         if (isDbl) {
           ctx.beginPath(); ctx.moveTo(x1 + nx, y1 + ny); ctx.lineTo(x2 + nx, y2 + ny); ctx.stroke()
           ctx.beginPath(); ctx.moveTo(x1 - nx, y1 - ny); ctx.lineTo(x2 - nx, y2 - ny); ctx.stroke()
@@ -225,102 +318,141 @@ function MoleculeCanvas({ pesticide, showImproved, animating }) {
         }
       })
 
-      // Draw atoms
       atoms.forEach((atom, idx) => {
-        const x = tx(atom.x), y = ty(atom.y)
-        const r = (atom.r || 10) * Math.min(scale, 1.2)
+        const x = tx(atom.x, idx)
+        const y = ty(atom.y, idx)
+        const radius = (atom.r || 10) * Math.min(scale, 1.2)
 
-        // Glow
-        const gradient = ctx.createRadialGradient(x, y, 0, x, y, r * 2.5)
-        gradient.addColorStop(0, showImproved
-          ? `rgba(0,232,122,${0.18 + pulse * 0.08})`
-          : `${col}18`)
-        gradient.addColorStop(1, 'transparent')
-        ctx.fillStyle = gradient
-        ctx.beginPath(); ctx.arc(x, y, r * 2.5, 0, Math.PI * 2); ctx.fill()
-
-        // Circle
-        ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2)
-        ctx.fillStyle = showImproved
-          ? `rgba(0,232,122,0.15)`
-          : `${col}22`
+        ctx.fillStyle = phase === 'optimized'
+          ? `rgba(29,115,80,${0.1 + pulse * 0.05})`
+          : 'rgba(46,98,136,0.08)'
+        ctx.beginPath()
+        ctx.arc(x, y, radius * 2.5, 0, Math.PI * 2)
         ctx.fill()
-        ctx.strokeStyle = showImproved ? `rgba(0,232,122,0.7)` : col
-        ctx.lineWidth = 1.5
+
+        ctx.fillStyle = palette.surface
+        ctx.strokeStyle = color
+        ctx.lineWidth = 2
+        ctx.beginPath()
+        ctx.arc(x, y, radius, 0, Math.PI * 2)
+        ctx.fill()
         ctx.stroke()
 
-        // Label
-        ctx.fillStyle = showImproved ? '#00e87a' : col
-        ctx.font = `bold ${Math.max(9, r * 0.9)}px "JetBrains Mono", monospace`
+        ctx.fillStyle = color
+        ctx.font = `700 ${Math.max(9, radius * 0.9)}px SFMono-Regular, Consolas, monospace`
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(atom.el, x, y)
       })
 
-      // Binding site indicator
-      if (showImproved) {
-        const cx = W / 2, cy = H / 2
-        ctx.strokeStyle = `rgba(0,232,122,${0.06 + pulse * 0.04})`
+      if (phase === 'optimized') {
+        ctx.strokeStyle = 'rgba(29,115,80,0.38)'
         ctx.lineWidth = 1
         ctx.setLineDash([4, 8])
-        ctx.beginPath(); ctx.arc(cx, cy, 90, 0, Math.PI * 2); ctx.stroke()
+        ctx.beginPath()
+        ctx.ellipse(width * 0.46, height * 0.5, 118 + pulse * 8, 74 + pulse * 4, -0.12, 0, Math.PI * 2)
+        ctx.stroke()
         ctx.setLineDash([])
       }
 
-      animRef.current = requestAnimationFrame(draw)
+      ctx.restore()
     }
 
-    draw()
-    return () => cancelAnimationFrame(animRef.current)
-  }, [pesticide, showImproved])
+    const drawAnnotations = (palette) => {
+      ctx.save()
+      ctx.fillStyle = palette.muted
+      ctx.font = '12px SFMono-Regular, Consolas, monospace'
+      ctx.textAlign = 'left'
+      ctx.fillText(activeStep <= 1 ? 'original molecule' : 'candidate search space', 22, 26)
 
-  return (
-    <canvas
-      ref={canvasRef}
-      width={500}
-      height={300}
-      style={{ width: '100%', height: '100%', display: 'block' }}
-    />
-  )
+      const labels = [
+        ['toxicity', pesticide.toxicity],
+        ['selectivity', pesticide.selectivity],
+        ['persistence', pesticide.persistence],
+      ]
+      labels.forEach(([label, value], i) => {
+        const y = height - 76 + i * 18
+        ctx.fillStyle = palette.muted
+        ctx.fillText(label, 22, y)
+        ctx.fillStyle = value > 70 ? pesticide.color : palette.accent
+        ctx.fillRect(112, y - 8, Math.max(24, value * 1.45), 7)
+      })
+      ctx.restore()
+    }
+
+    const draw = () => {
+      const palette = readTheme()
+      const t = frame * 0.018
+      frame += media.matches ? 0 : 1
+
+      ctx.clearRect(0, 0, width, height)
+      ctx.fillStyle = 'rgba(255,255,255,0)'
+      ctx.fillRect(0, 0, width, height)
+      drawReceptor(palette, t)
+      drawMolecule(palette, t)
+      drawAnnotations(palette)
+
+      if (!media.matches) raf = requestAnimationFrame(draw)
+    }
+
+    resize()
+    draw()
+    window.addEventListener('resize', resize)
+    const observer = new MutationObserver(draw)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] })
+
+    return () => {
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', resize)
+      observer.disconnect()
+    }
+  }, [pesticide, phase, activeStep])
+
+  return <canvas className="lab-canvas" ref={canvasRef} aria-hidden="true" />
 }
 
 function ScoreBar({ label, value, improved, color }) {
-  const [displayed, setDisplayed] = useState(0)
-  const [displayedImp, setDisplayedImp] = useState(0)
+  const [displayed, setDisplayed] = useState(value)
+  const [displayedImp, setDisplayedImp] = useState(improved)
 
   useEffect(() => {
     let raf
-    let start = null
-    const animate = (ts) => {
-      if (!start) start = ts
-      const progress = Math.min((ts - start) / 800, 1)
+    let start
+
+    const animate = (timestamp) => {
+      if (!start) start = timestamp
+      const progress = Math.min((timestamp - start) / 650, 1)
       setDisplayed(Math.round(value * progress))
       setDisplayedImp(Math.round(improved * progress))
       if (progress < 1) raf = requestAnimationFrame(animate)
     }
+
+    setDisplayed(0)
+    setDisplayedImp(0)
     raf = requestAnimationFrame(animate)
     return () => cancelAnimationFrame(raf)
   }, [value, improved])
 
   return (
-    <div style={{ marginBottom: 14 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 6, fontSize: 12 }}>
-        <span style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>{label}</span>
-        <div style={{ display: 'flex', gap: 8, fontFamily: 'var(--mono)', fontSize: 11 }}>
-          <span style={{ color: color }}>{displayed}%</span>
-          <span style={{ color: 'var(--text-muted)' }}>→</span>
-          <span style={{ color: 'var(--accent)', fontWeight: 700 }}>{displayedImp}%</span>
-        </div>
+    <div className="score-row">
+      <div className="score-top">
+        <span>{label}</span>
+        <span className="score-values">
+          <span>{displayed}%</span>
+          <span>to</span>
+          <strong>{displayedImp}%</strong>
+        </span>
       </div>
-      <div style={{ height: 6, background: 'var(--border)', borderRadius: 3, overflow: 'hidden', position: 'relative' }}>
-        <div style={{
-          position: 'absolute', height: '100%', borderRadius: 3,
-          width: `${displayed}%`, background: color, opacity: 0.35, transition: 'width 0.05s',
-        }} />
-        <div style={{
-          position: 'absolute', height: '100%', borderRadius: 3,
-          width: `${displayedImp}%`, background: 'var(--accent)', transition: 'width 0.05s',
-        }} />
+      <div
+        className="score-track"
+        style={{
+          '--score': `${displayed}%`,
+          '--improved': `${displayedImp}%`,
+          '--score-color': color,
+        }}
+      >
+        <span />
+        <strong />
       </div>
     </div>
   )
@@ -328,190 +460,177 @@ function ScoreBar({ label, value, improved, color }) {
 
 export default function MoleculeVisualizer() {
   const [selected, setSelected] = useState(PESTICIDES[0])
-  const [showImproved, setShowImproved] = useState(false)
-  const [running, setRunning] = useState(false)
+  const [phase, setPhase] = useState('idle')
+  const [activeStep, setActiveStep] = useState(0)
+  const timersRef = useRef([])
 
-  const runAnalysis = () => {
-    setRunning(true)
-    setShowImproved(false)
-    setTimeout(() => { setShowImproved(true); setRunning(false) }, 2200)
+  const isRunning = phase === 'analyzing'
+  const isOptimized = phase === 'optimized'
+
+  const clearTimers = () => {
+    timersRef.current.forEach(timer => clearTimeout(timer))
+    timersRef.current = []
   }
 
+  useEffect(() => clearTimers, [])
+
+  const selectPesticide = (pesticide) => {
+    clearTimers()
+    setSelected(pesticide)
+    setPhase('idle')
+    setActiveStep(0)
+  }
+
+  const runAnalysis = () => {
+    clearTimers()
+    setPhase('analyzing')
+    setActiveStep(1)
+    timersRef.current = [
+      setTimeout(() => setActiveStep(2), 760),
+      setTimeout(() => setActiveStep(3), 1520),
+      setTimeout(() => {
+        setActiveStep(4)
+        setPhase('optimized')
+      }, 2360),
+    ]
+  }
+
+  const persistenceCandidate = Math.round(selected.persistence * 0.45)
+  const reduction = Math.round(((selected.toxicity - selected.improvedToxicity) / selected.toxicity) * 100)
+
   return (
-    <section id="ai-lab" style={{ background: 'var(--bg)' }}>
+    <section id="ai-lab" className="lab-section">
       <div className="container">
-        {/* Header */}
-        <div style={{ marginBottom: 48, maxWidth: 680 }}>
-          <span className="section-label"><Cpu size={12} /> AI Binding Lab</span>
-          <h2 className="section-title">Molecular redesign<br />powered by AI.</h2>
-          <p className="section-subtitle">
-            Select a pesticide to visualize its molecular structure and binding target.
-            Run the AI analysis to see how structural modifications can drastically reduce toxicity
-            while preserving agricultural effectiveness.
+        <div className="lab-header reveal">
+          <div>
+            <span className="section-label"><Cpu size={14} /> Binding Lab</span>
+            <h2 className="section-title">A visual model for safer pesticide candidates.</h2>
+            <p className="section-subtitle">
+              Select a compound, watch the binding workflow run, then compare the original risk
+              profile against a lower-toxicity candidate hypothesis.
+            </p>
+          </div>
+          <p className="lab-note">
+            The lab is an explanatory model for research prioritization. It turns molecular
+            structure into a readable safety comparison before any candidate would need wet-lab validation.
           </p>
         </div>
 
-        {/* Pesticide selector */}
-        <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 32 }}>
-          {PESTICIDES.map(p => (
-            <button key={p.id} onClick={() => { setSelected(p); setShowImproved(false) }}
-              style={{
-                padding: '8px 16px', borderRadius: 8, cursor: 'pointer',
-                fontSize: 13, fontWeight: 600, border: '1px solid',
-                borderColor: selected.id === p.id ? p.color : 'var(--border)',
-                background: selected.id === p.id ? `${p.color}15` : 'var(--bg-card)',
-                color: selected.id === p.id ? p.color : 'var(--text-secondary)',
-                transition: 'all 0.2s',
-              }}>
-              {p.name}
+        <div className="pesticide-tabs reveal reveal-delay-1" aria-label="Pesticide selector">
+          {PESTICIDES.map(pesticide => (
+            <button
+              key={pesticide.id}
+              type="button"
+              className={`pesticide-tab ${selected.id === pesticide.id ? 'is-active' : ''}`}
+              style={{ '--tab-color': pesticide.color }}
+              onClick={() => selectPesticide(pesticide)}
+            >
+              {pesticide.name}
             </button>
           ))}
         </div>
 
-        {/* Main lab panel */}
-        <div style={{
-          display: 'grid', gridTemplateColumns: '1fr 380px', gap: 20,
-          alignItems: 'start',
-        }} className="lab-grid">
-          {/* Molecule canvas */}
-          <div style={{
-            background: 'var(--bg-card)', border: '1px solid var(--border)',
-            borderRadius: 20, overflow: 'hidden',
-          }}>
-            {/* Canvas header */}
-            <div style={{
-              padding: '14px 20px', borderBottom: '1px solid var(--border)',
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{
-                  width: 10, height: 10, borderRadius: '50%',
-                  background: showImproved ? 'var(--accent)' : selected.color,
-                  boxShadow: `0 0 8px ${showImproved ? 'var(--accent)' : selected.color}`,
-                  animation: 'pulse-glow 2s infinite',
-                }} />
-                <span style={{ fontFamily: 'var(--mono)', fontSize: 12, color: 'var(--text-secondary)' }}>
-                  {showImproved ? 'AI-OPTIMIZED STRUCTURE' : 'ORIGINAL STRUCTURE'}
+        <div className="lab-grid">
+          <div
+            className={`lab-stage reveal scroll-rise ${isRunning ? 'is-running' : ''}`}
+            style={{ '--status-color': isOptimized ? 'var(--accent)' : selected.color }}
+          >
+            <div className="lab-stage-header">
+              <div className="lab-status">
+                <span className="status-dot" />
+                <span>
+                  {isRunning ? 'binding simulation in progress' : isOptimized ? 'candidate comparison ready' : 'original structure loaded'}
                 </span>
               </div>
-              <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-muted)' }}>
-                {selected.formula}
-              </span>
+              <span className="lab-formula">{selected.formula}</span>
             </div>
 
-            {/* Canvas */}
-            <div style={{ padding: 20, height: 300 }}>
-              <MoleculeCanvas pesticide={selected} showImproved={showImproved} />
+            <div className="lab-canvas-wrap">
+              <MoleculeCanvas pesticide={selected} phase={phase} activeStep={activeStep} />
             </div>
 
-            {/* Canvas footer */}
-            <div style={{
-              padding: '12px 20px', borderTop: '1px solid var(--border)',
-              background: 'var(--bg)', fontSize: 12, color: 'var(--text-muted)',
-              fontFamily: 'var(--mono)', display: 'flex', justifyContent: 'space-between',
-            }}>
+            <div className="flow-map">
+              {FLOW_STEPS.map((step, index) => (
+                <div
+                  key={step.title}
+                  className={`flow-node ${activeStep >= index + 1 || (phase === 'idle' && index === 0) ? 'is-active' : ''}`}
+                >
+                  <span className="flow-node-index">{step.icon}</span>
+                  <h3>{step.title}</h3>
+                  <p>{step.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <div className="lab-stage-footer">
               <span>Target: {selected.bindingTarget}</span>
               <span className={`tag ${selected.statusColor}`}>{selected.status}</span>
             </div>
           </div>
 
-          {/* Side panel */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            {/* Mechanism */}
-            <div className="card">
-              <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--text-muted)', marginBottom: 8, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                Binding Mechanism
-              </div>
-              <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                {selected.mechanism}
-              </p>
+          <div className="lab-side">
+            <div className="card lab-card reveal reveal-delay-1">
+              <span className={`tag ${selected.statusColor}`}>{selected.class}</span>
+              <h3 style={{ marginTop: 12 }}>{selected.name}</h3>
+              <p>{selected.mechanism}</p>
             </div>
 
-            {/* Scores */}
-            <div className="card">
-              <div style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--text-muted)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                Property Scores
-              </div>
-              <ScoreBar label="Mammalian Toxicity" value={selected.toxicity} improved={selected.improvedToxicity} color={selected.color} />
-              <ScoreBar label="Pest Selectivity" value={selected.selectivity} improved={selected.improvedSelectivity} color={selected.color} />
-              <ScoreBar label="Environmental Persistence" value={selected.persistence} improved={Math.round(selected.persistence * 0.45)} color={selected.color} />
+            <div className="card lab-card score-card reveal reveal-delay-2">
+              <h3><Activity size={17} /> Property comparison</h3>
+              <ScoreBar label="Mammalian toxicity" value={selected.toxicity} improved={selected.improvedToxicity} color={selected.color} />
+              <ScoreBar label="Pest selectivity" value={selected.selectivity} improved={selected.improvedSelectivity} color={selected.color} />
+              <ScoreBar label="Environmental persistence" value={selected.persistence} improved={persistenceCandidate} color={selected.color} />
             </div>
 
-            {/* AI suggestion */}
-            {showImproved && (
-              <div className="card" style={{ borderColor: 'var(--border-hover)', background: 'var(--accent-dim)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 10 }}>
-                  <CheckCircle size={15} color="var(--accent)" />
-                  <span style={{ fontSize: 11, fontFamily: 'var(--mono)', color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                    AI Modification
-                  </span>
-                </div>
-                <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.65 }}>
-                  {selected.aiSuggestion}
-                </p>
-                <div style={{
-                  marginTop: 12, padding: '8px 12px', background: 'var(--bg-card)',
-                  borderRadius: 8, display: 'flex', justifyContent: 'space-between',
-                }}>
-                  <span style={{ fontSize: 12, color: 'var(--text-muted)' }}>Toxicity reduction</span>
-                  <span style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)', fontFamily: 'var(--mono)' }}>
-                    -{Math.round(((selected.toxicity - selected.improvedToxicity) / selected.toxicity) * 100)}%
-                  </span>
+            {isOptimized && (
+              <div className="card lab-card candidate-card reveal is-visible">
+                <h3><CheckCircle size={17} /> Candidate hypothesis</h3>
+                <p>{selected.aiSuggestion}</p>
+                <div className="candidate-stat">
+                  <span>Predicted toxicity reduction</span>
+                  <strong>-{reduction}%</strong>
                 </div>
               </div>
             )}
 
-            {/* Run button */}
-            <button onClick={runAnalysis} disabled={running}
-              className="btn btn-primary"
-              style={{
-                width: '100%', justifyContent: 'center', fontSize: 14,
-                opacity: running ? 0.7 : 1,
-                background: showImproved ? 'var(--accent)' : 'var(--accent)',
-              }}>
-              {running ? (
+            <button
+              type="button"
+              onClick={runAnalysis}
+              disabled={isRunning}
+              className="btn btn-primary reveal reveal-delay-3"
+            >
+              {isRunning ? (
                 <>
-                  <span style={{ display: 'inline-block', animation: 'rotate-slow 1s linear infinite' }}>
-                    <Cpu size={15} />
-                  </span>
-                  Running AI Analysis...
+                  <Shield size={16} /> Running simulation
                 </>
-              ) : showImproved ? (
-                <><Zap size={15} /> Re-run Analysis</>
+              ) : isOptimized ? (
+                <>
+                  <Zap size={16} /> Run again
+                </>
               ) : (
-                <><Zap size={15} /> Run AI Analysis</>
+                <>
+                  <Zap size={16} /> Run binding simulation
+                </>
               )}
             </button>
           </div>
         </div>
 
-        {/* How it works */}
-        <div style={{ marginTop: 48 }}>
-          <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 20, fontFamily: 'var(--mono)' }}>
-            How the AI works
-          </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 16 }}>
-            {[
-              { step: '01', title: 'Structural Input', desc: 'Pesticide SMILES string parsed into graph representation where atoms are nodes and bonds are edges.' },
-              { step: '02', title: 'GNN Encoding', desc: 'Graph Neural Network processes atomic features (element, charge, hybridization) through 6 message-passing layers.' },
-              { step: '03', title: 'Binding Prediction', desc: 'Model predicts binding affinity (ΔG) to target receptor and off-target mammalian enzymes simultaneously.' },
-              { step: '04', title: 'Scaffold Optimization', desc: 'Genetic algorithm guided by the GNN modifies functional groups iteratively to maximize selectivity index.' },
-            ].map(step => (
-              <div key={step.step} className="card" style={{ padding: 20 }}>
-                <div style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--accent)', marginBottom: 8 }}>{step.step}</div>
-                <div style={{ fontWeight: 700, fontSize: 14, marginBottom: 6 }}>{step.title}</div>
-                <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.6 }}>{step.desc}</div>
-              </div>
-            ))}
-          </div>
+        <div className="protocol-grid">
+          {[
+            { step: '01', title: 'Structure input', desc: 'Atoms, bonds, charge, and scaffold geometry form the molecular graph.' },
+            { step: '02', title: 'Binding estimate', desc: 'The model compares the pest target with off-target mammalian systems.' },
+            { step: '03', title: 'Constraint search', desc: 'Candidate changes are screened for selectivity, persistence, and known toxicophores.' },
+            { step: '04', title: 'Research priority', desc: 'The best hypotheses move into validation planning rather than direct deployment.' },
+          ].map((item, index) => (
+            <article key={item.step} className={`card protocol-card reveal scroll-rise ${index % 2 ? 'reveal-delay-1' : ''}`}>
+              <span>{item.step}</span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </article>
+          ))}
         </div>
       </div>
-
-      <style>{`
-        @media (max-width: 860px) {
-          .lab-grid { grid-template-columns: 1fr !important; }
-        }
-      `}</style>
     </section>
   )
 }

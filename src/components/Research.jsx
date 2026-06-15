@@ -1,106 +1,112 @@
-import { BookOpen, FlaskConical, ChevronRight, ExternalLink } from 'lucide-react'
+import { useState } from 'react'
+import { BookOpen, ChevronRight } from 'lucide-react'
 
 const papers = [
   {
     id: 'R01',
     category: 'Toxicology',
-    title: 'Paraquat Ban Efficacy in Reducing Poisoning Fatalities in Malaysia',
-    abstract: 'Analysis of mortality data pre- and post-ban shows a 38% reduction in pesticide-related fatalities, yet illegal trade channels sustain residual exposure. AI-modeled substitutes exhibit comparable herbicidal binding with 60% lower mammalian toxicity scores.',
+    title: 'Paraquat ban efficacy and residual exposure pathways in Malaysia',
+    abstract: 'A review of mortality and exposure data before and after the national ban shows a sharp reduction in pesticide-related fatalities, while informal trade keeps residual risk alive. The brief identifies molecular replacement criteria for herbicidal activity with lower mammalian toxicity.',
     year: 2023,
-    tags: ['Paraquat', 'Herbicide', 'Ban Policy'],
-    highlight: 'Illegal trade persists despite ban — molecular redesign offers a legal, safer alternative.',
+    tags: ['Paraquat', 'Herbicide', 'Policy'],
+    highlight: 'Illegal access persists after bans, so replacement chemistry matters as much as enforcement.',
   },
   {
     id: 'R02',
     category: 'Environmental',
-    title: 'Pesticide Runoff and Biodiversity Loss in Cameron Highlands Watersheds',
-    abstract: 'Systematic water sampling across 14 highland rivers documents chlorpyrifos and cypermethrin concentrations at 4–12× safe thresholds. Biodiversity surveys confirm 31% decline in aquatic macroinvertebrate populations over a 10-year window.',
+    title: 'Residue runoff and biodiversity loss in Cameron Highlands watersheds',
+    abstract: 'Water sampling across highland rivers points to repeated pesticide loading in catchments near intensive farms. The synthesis connects runoff risk with compound persistence, rainfall, slope, and spray timing.',
     year: 2024,
-    tags: ['Chlorpyrifos', 'Watershed', 'Biodiversity'],
-    highlight: '4–12× above safe thresholds detected in highland river systems.',
+    tags: ['Runoff', 'Watershed', 'Biodiversity'],
+    highlight: 'Persistence and timing shape environmental risk beyond application dose alone.',
   },
   {
     id: 'R03',
-    category: 'AI Research',
-    title: 'Graph Neural Networks for Pesticide Binding Affinity Prediction',
-    abstract: 'A GNN model trained on 45,000 molecular structures achieves 91.4% accuracy predicting acetylcholinesterase binding affinity — the primary mechanism behind organophosphate toxicity. The model identifies structural modifications that preserve target pest receptor binding while reducing off-target mammalian binding by 40–70%.',
+    category: 'Modeling',
+    title: 'Graph models for pesticide binding affinity prediction',
+    abstract: 'Molecular graphs can estimate binding affinity against target pest receptors and off-target mammalian enzymes. The model outputs are used as comparison signals, not final safety claims.',
     year: 2024,
-    tags: ['GNN', 'AChE Binding', 'ML Model'],
-    highlight: '91.4% accuracy in binding affinity prediction; 40–70% toxicity reduction.',
+    tags: ['Molecular graph', 'AChE', 'Prediction'],
+    highlight: 'Binding predictions help prioritize safer scaffolds before lab validation.',
   },
   {
     id: 'R04',
-    category: 'Occupational Health',
-    title: 'Chronic Exposure Outcomes in Malaysian Oil Palm Estate Workers',
-    abstract: 'Longitudinal cohort study of 1,240 estate workers reveals elevated cholinesterase inhibition in 34% of participants, with reproductive irregularities correlated to organophosphate handling. PPE non-compliance linked to language barriers and inadequate safety training infrastructure.',
+    category: 'Occupational health',
+    title: 'Chronic exposure outcomes in oil palm estate workers',
+    abstract: 'Longitudinal worker data shows elevated biomarkers among handlers with frequent organophosphate exposure. The review highlights training access, language barriers, and inconsistent PPE availability as practical safety constraints.',
     year: 2023,
-    tags: ['Organophosphate', 'PPE', 'Chronic Exposure'],
-    highlight: '34% of workers show cholinesterase inhibition — a marker of systemic poisoning.',
+    tags: ['Exposure', 'PPE', 'Organophosphate'],
+    highlight: 'Design and policy both fail if worker conditions are treated as an afterthought.',
   },
   {
     id: 'R05',
-    category: 'Food Safety',
-    title: 'Multi-Residue Analysis of Highland Vegetables: A 3-Year Surveillance Study',
-    abstract: 'LC-MS/MS analysis of 2,100 samples from Brinchang and Tanah Rata markets identifies 18 distinct pesticide residues on leafy vegetables; 22% of samples exceed EU maximum residue limits. Washing with baking soda solution reduces surface residues by 47–69% but cannot remove systemic residues.',
+    category: 'Food safety',
+    title: 'Multi-residue analysis of highland vegetables',
+    abstract: 'Market sampling of leafy vegetables identifies multiple residue classes and uneven compliance with maximum residue limits. The brief separates surface residues from systemic residues when discussing mitigation.',
     year: 2024,
-    tags: ['MRL', 'LC-MS/MS', 'Food Safety'],
-    highlight: '22% of market samples exceed EU maximum residue limits.',
+    tags: ['MRL', 'Residue', 'Food safety'],
+    highlight: 'Residue control depends on compound behavior, not only washing or handling.',
   },
   {
     id: 'R06',
-    category: 'AI Research',
-    title: 'Diffusion Models for De Novo Pesticide Molecule Generation',
-    abstract: 'Applying DDPM-based molecular generation conditioned on target pest enzyme structures, we generate 312 candidate molecules with predicted selectivity indices >100 (vs. <10 for most commercial pesticides). Three candidates have entered in-silico ADMET screening with promising profiles.',
+    category: 'Modeling',
+    title: 'Generative design constraints for safer pesticide candidates',
+    abstract: 'Candidate generation is constrained by selectivity, predicted persistence, solubility, and known toxicophores. Gycide uses the workflow as a research lens for comparing redesign options.',
     year: 2025,
-    tags: ['Diffusion Model', 'ADMET', 'De Novo Design'],
-    highlight: 'Selectivity index >100 — 10× safer than current commercial pesticides.',
+    tags: ['Candidate design', 'ADMET', 'Selectivity'],
+    highlight: 'The goal is to narrow possibilities into testable, safer design hypotheses.',
   },
 ]
 
 const categoryColors = {
-  'Toxicology': 'tag-red',
-  'Environmental': 'tag-green',
-  'AI Research': 'tag-blue',
-  'Occupational Health': 'tag-orange',
-  'Food Safety': 'tag-orange',
+  Toxicology: 'tag-red',
+  Environmental: 'tag-green',
+  Modeling: 'tag-blue',
+  'Occupational health': 'tag-orange',
+  'Food safety': 'tag-gold',
 }
 
 export default function Research() {
   return (
-    <section id="research" style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+    <section id="research" className="research-section">
       <div className="container">
-        {/* Header */}
-        <div style={{ marginBottom: 60, maxWidth: 680 }}>
-          <span className="section-label"><BookOpen size={12} /> Scientific Research</span>
-          <h2 className="section-title">What the science says<br />about Malaysian pesticides.</h2>
+        <div className="section-header reveal">
+          <span className="section-label"><BookOpen size={14} /> Evidence Library</span>
+          <h2 className="section-title">Research that connects field risk to molecular behavior.</h2>
           <p className="section-subtitle">
-            Our research synthesizes field surveillance data, molecular toxicology, and
-            cutting-edge AI models to build an evidence base for safer pesticide design.
+            The library brings together toxicology, environment, worker safety, residue studies,
+            and computational modeling so each design choice has a visible chain of reasoning.
           </p>
         </div>
 
-        {/* Paper list */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-          {papers.map((paper, i) => (
-            <PaperCard key={paper.id} paper={paper} index={i} />
-          ))}
-        </div>
+        <div className="research-shell">
+          <div className="paper-list">
+            {papers.map((paper, index) => (
+              <PaperCard key={paper.id} paper={paper} index={index} />
+            ))}
+          </div>
 
-        {/* Bottom CTA */}
-        <div style={{
-          marginTop: 40, textAlign: 'center',
-          padding: '32px', background: 'var(--bg)',
-          borderRadius: 16, border: '1px solid var(--border)',
-        }}>
-          <div style={{ fontSize: 14, color: 'var(--text-muted)', marginBottom: 12, fontFamily: 'var(--mono)' }}>
-            Research database
-          </div>
-          <div style={{ fontSize: 17, fontWeight: 600, marginBottom: 8 }}>
-            6 studies · 4 research categories · 2023–2025
-          </div>
-          <div style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
-            All findings inform the AI molecular binding models in the lab below.
-          </div>
+          <aside className="research-aside reveal scroll-rise">
+            <h3>How the evidence is used</h3>
+            <p>
+              Each brief feeds a practical comparison: what the compound targets, where it persists,
+              and which off-target systems create unacceptable risk.
+            </p>
+            <div className="research-metrics">
+              <div className="research-metric">
+                <span>Research categories</span>
+                <strong>5</strong>
+              </div>
+              <div className="research-metric">
+                <span>Current briefs</span>
+                <strong>6</strong>
+              </div>
+              <div className="research-metric">
+                <span>Study window</span>
+                <strong>2023-25</strong>
+              </div>
+            </div>
+          </aside>
         </div>
       </div>
     </section>
@@ -108,57 +114,49 @@ export default function Research() {
 }
 
 function PaperCard({ paper, index }) {
-  const [expanded, setExpanded] = useState(false)
+  const [expanded, setExpanded] = useState(index === 0)
+  const delayClass = index % 3 === 1 ? 'reveal-delay-1' : index % 3 === 2 ? 'reveal-delay-2' : ''
 
   return (
-    <div className="card" style={{ cursor: 'pointer' }} onClick={() => setExpanded(e => !e)}>
-      <div style={{ display: 'flex', gap: 16, alignItems: 'flex-start' }}>
-        {/* ID badge */}
-        <div style={{
-          flexShrink: 0, width: 40, height: 40, borderRadius: 10,
-          background: 'var(--accent-dim)', border: '1px solid var(--border)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          fontFamily: 'var(--mono)', fontSize: 10, fontWeight: 700, color: 'var(--accent)',
-        }}>
-          {paper.id}
-        </div>
-
-        <div style={{ flex: 1, minWidth: 0 }}>
-          {/* Top row */}
-          <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 8, flexWrap: 'wrap' }}>
+    <article
+      className={`card paper-card reveal scroll-rise ${delayClass} ${expanded ? 'is-expanded' : ''}`}
+      onClick={() => setExpanded(open => !open)}
+      onKeyDown={(event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault()
+          setExpanded(open => !open)
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      aria-expanded={expanded}
+    >
+      <div className="paper-top">
+        <span className="paper-id">{paper.id}</span>
+        <div>
+          <div className="paper-meta">
             <span className={`tag ${categoryColors[paper.category] || 'tag-blue'}`}>{paper.category}</span>
-            <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--text-muted)' }}>{paper.year}</span>
+            <span className="paper-year">{paper.year}</span>
           </div>
 
-          <h3 style={{ fontSize: 15, fontWeight: 700, marginBottom: 8, lineHeight: 1.4 }}>{paper.title}</h3>
-
-          {/* Highlight */}
-          <div style={{
-            fontSize: 13, color: 'var(--accent)', fontWeight: 600,
-            display: 'flex', alignItems: 'center', gap: 6,
-          }}>
-            <ChevronRight size={13} style={{ transform: expanded ? 'rotate(90deg)' : 'none', transition: '0.2s' }} />
-            {paper.highlight}
+          <h3>{paper.title}</h3>
+          <div className="paper-highlight">
+            <ChevronRight className="paper-chevron" size={15} />
+            <span>{paper.highlight}</span>
           </div>
 
-          {/* Expanded content */}
           {expanded && (
-            <div style={{ marginTop: 16, paddingTop: 16, borderTop: '1px solid var(--border)' }}>
-              <p style={{ fontSize: 13.5, color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 14 }}>
-                {paper.abstract}
-              </p>
-              <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-                {paper.tags.map(t => (
-                  <span key={t} className="tag tag-blue">{t}</span>
+            <div className="paper-abstract">
+              <p>{paper.abstract}</p>
+              <div className="paper-tags">
+                {paper.tags.map(tag => (
+                  <span key={tag} className="tag tag-blue">{tag}</span>
                 ))}
               </div>
             </div>
           )}
         </div>
       </div>
-    </div>
+    </article>
   )
 }
-
-// Need useState
-import { useState } from 'react'

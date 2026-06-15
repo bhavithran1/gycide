@@ -1,115 +1,108 @@
-import { ExternalLink, Github, Globe } from 'lucide-react'
+import { ExternalLink, Github, Globe, MapPinned, Microscope, ShieldCheck, Sprout } from 'lucide-react'
+
+const principles = [
+  {
+    icon: <Microscope size={22} />,
+    title: 'Molecular accountability',
+    desc: 'Every recommendation starts with target binding, off-target toxicity, and persistence behavior.',
+  },
+  {
+    icon: <MapPinned size={22} />,
+    title: 'Malaysia-first context',
+    desc: 'The research lens stays grounded in local crops, worker conditions, highland farms, and water systems.',
+  },
+  {
+    icon: <ShieldCheck size={22} />,
+    title: 'Safety before novelty',
+    desc: 'Candidate design is treated as a risk-reduction workflow, not a shortcut around validation.',
+  },
+  {
+    icon: <Sprout size={22} />,
+    title: 'Practical transition',
+    desc: 'The end goal is safer farming practice that remains usable for growers and measurable for regulators.',
+  },
+]
 
 export default function About() {
   return (
-    <section id="team" style={{ background: 'var(--bg-card)', borderTop: '1px solid var(--border)' }}>
+    <section id="team" className="about-section">
       <div className="container">
-        {/* Header */}
-        <div style={{ marginBottom: 56, maxWidth: 600 }}>
+        <div className="section-header reveal">
           <span className="section-label">Our Team</span>
-          <h2 className="section-title">Built by researchers,<br />for safer agriculture.</h2>
+          <h2 className="section-title">A focused research initiative for safer agriculture.</h2>
           <p className="section-subtitle">
-            Gycide is an independent research initiative combining computational chemistry,
-            machine learning, and field data to engineer pesticides that protect crops
-            without harming people or the planet.
+            Gycide combines computational chemistry, machine learning, toxicology review,
+            and field context to make pesticide risk easier to understand and redesign.
           </p>
         </div>
 
-        {/* Founder card */}
-        <div style={{ maxWidth: 480 }}>
-          <div style={{
-            background: 'var(--bg)',
-            border: '1px solid var(--border)',
-            borderRadius: 20,
-            padding: 32,
-            transition: 'border-color 0.25s, box-shadow 0.25s',
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.borderColor = 'var(--border-hover)'
-            e.currentTarget.style.boxShadow = 'var(--shadow-glow)'
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.borderColor = 'var(--border)'
-            e.currentTarget.style.boxShadow = 'none'
-          }}>
-            {/* Avatar */}
-            <div style={{ display: 'flex', alignItems: 'flex-start', gap: 20, marginBottom: 24 }}>
-              <div style={{
-                width: 68, height: 68, borderRadius: 18,
-                background: 'linear-gradient(135deg, var(--accent) 0%, #0099ff 100%)',
-                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                fontSize: 26, fontWeight: 800, color: '#000',
-                flexShrink: 0, letterSpacing: '-0.02em',
-              }}>
-                B
-              </div>
+        <div className="about-layout">
+          <article className="card profile-card reveal scroll-rise">
+            <div className="profile-head">
+              <span className="avatar">B</span>
               <div>
-                <div style={{ fontWeight: 800, fontSize: 20, marginBottom: 4 }}>Bhavithran</div>
-                <div style={{ fontSize: 13, color: 'var(--accent)', fontWeight: 600, marginBottom: 6 }}>
-                  Founder & Lead Researcher
-                </div>
-                <span className="tag tag-green">Founder</span>
+                <h3>Bhavithran</h3>
+                <div className="profile-role">Founder and lead researcher</div>
+                <span className="tag tag-green">Research lead</span>
               </div>
             </div>
 
-            <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 24 }}>
-              Driving Gycide's mission to leverage artificial intelligence for pesticide safety
-              reform in Malaysian agriculture. Combining computational biology with field research
-              to develop data-driven, evidence-based solutions for a healthier food system.
+            <p>
+              Bhavithran leads Gycide as an independent research project focused on pesticide
+              safety reform in Malaysian agriculture. The work brings computational biology
+              together with field-facing evidence so safer compound design can be discussed
+              clearly and responsibly.
             </p>
 
-            {/* Links */}
-            <div style={{ display: 'flex', gap: 10 }}>
+            <div className="profile-actions">
               <a
                 href="https://bhavithran1.github.io/personal-website/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-primary"
-                style={{ fontSize: 13, padding: '9px 18px' }}
               >
-                <Globe size={14} />
-                Personal Site
-                <ExternalLink size={12} />
+                <Globe size={16} />
+                Personal site
+                <ExternalLink size={14} />
               </a>
               <a
-                href="https://bhavithran1.github.io/personal-website/"
+                href="https://github.com/bhavithran1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn btn-outline"
-                style={{ fontSize: 13, padding: '9px 18px' }}
               >
-                <Github size={14} />
+                <Github size={16} />
                 GitHub
               </a>
             </div>
-          </div>
-        </div>
+          </article>
 
-        {/* Mission callout */}
-        <div style={{
-          marginTop: 48,
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
-          gap: 16,
-        }}>
-          {[
-            { num: '5', label: 'Pesticides analyzed', sub: 'with AI binding models' },
-            { num: '6', label: 'Research studies', sub: 'reviewed & synthesized' },
-            { num: '~70%', label: 'Toxicity reduction', sub: 'projected via AI redesign' },
-          ].map(item => (
-            <div key={item.num} style={{
-              background: 'var(--bg)',
-              border: '1px solid var(--border)',
-              borderRadius: 14, padding: '20px 24px',
-              textAlign: 'center',
-            }}>
-              <div style={{ fontSize: 34, fontWeight: 800, color: 'var(--accent)', lineHeight: 1 }}>
-                {item.num}
-              </div>
-              <div style={{ fontSize: 14, fontWeight: 700, marginTop: 6 }}>{item.label}</div>
-              <div style={{ fontSize: 12, color: 'var(--text-muted)', marginTop: 2 }}>{item.sub}</div>
+          <div>
+            <div className="principles-grid">
+              {principles.map((item, index) => (
+                <article key={item.title} className={`card principle-card reveal scroll-rise ${index % 2 ? 'reveal-delay-1' : ''}`}>
+                  {item.icon}
+                  <h3>{item.title}</h3>
+                  <p>{item.desc}</p>
+                </article>
+              ))}
             </div>
-          ))}
+
+            <div className="project-metrics">
+              <div className="card project-metric reveal reveal-delay-1">
+                <strong>5</strong>
+                <span>compounds modeled</span>
+              </div>
+              <div className="card project-metric reveal reveal-delay-2">
+                <strong>6</strong>
+                <span>evidence briefs</span>
+              </div>
+              <div className="card project-metric reveal reveal-delay-3">
+                <strong>70%</strong>
+                <span>targeted risk reduction</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
