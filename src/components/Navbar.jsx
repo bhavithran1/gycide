@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
+import { Link, useLocation } from 'react-router-dom'
 import { Sun, Moon, Menu, X, FlaskConical } from 'lucide-react'
 
 const links = [
   { label: 'Problem', href: '#problem' },
+  { label: 'Research', href: '#research-areas' },
   { label: 'Evidence', href: '#research' },
   { label: 'Binding Lab', href: '#ai-lab' },
   { label: 'Team', href: '#team' },
@@ -11,6 +13,8 @@ const links = [
 export default function Navbar({ theme, toggleTheme }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+  const isHome = location.pathname === '/'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 28)
@@ -22,19 +26,23 @@ export default function Navbar({ theme, toggleTheme }) {
   return (
     <nav className={`site-nav ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="container nav-inner">
-        <a className="brand" href="#hero" aria-label="Gycide home">
+        <Link className="brand" to="/" aria-label="Gycide home">
           <span className="brand-mark">
             <FlaskConical size={18} strokeWidth={2.4} />
           </span>
           <span>gycide</span>
-        </a>
+        </Link>
 
         <div className="nav-links">
-          {links.map(link => (
-            <a className="nav-link" key={link.href} href={link.href}>
-              {link.label}
-            </a>
-          ))}
+          {isHome ? (
+            links.map(link => (
+              <a className="nav-link" key={link.href} href={link.href}>
+                {link.label}
+              </a>
+            ))
+          ) : (
+            <Link className="nav-link" to="/">Home</Link>
+          )}
         </div>
 
         <div className="nav-actions">
@@ -62,16 +70,20 @@ export default function Navbar({ theme, toggleTheme }) {
 
       {menuOpen && (
         <div className="container mobile-panel">
-          {links.map(link => (
-            <a
-              className="nav-link"
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-            >
-              {link.label}
-            </a>
-          ))}
+          {isHome ? (
+            links.map(link => (
+              <a
+                className="nav-link"
+                key={link.href}
+                href={link.href}
+                onClick={() => setMenuOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))
+          ) : (
+            <Link className="nav-link" to="/" onClick={() => setMenuOpen(false)}>Home</Link>
+          )}
           <button type="button" className="btn btn-outline" onClick={toggleTheme}>
             {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             {theme === 'dark' ? 'Light theme' : 'Dark theme'}

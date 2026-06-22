@@ -1,7 +1,9 @@
+import { Link } from 'react-router-dom'
 import { ExternalLink, FlaskConical } from 'lucide-react'
 
-const links = [
+const hashLinks = [
   { label: 'Problem', href: '#problem' },
+  { label: 'Research', href: '#research-areas' },
   { label: 'Evidence', href: '#research' },
   { label: 'Binding Lab', href: '#ai-lab' },
   { label: 'Team', href: '#team' },
@@ -11,15 +13,15 @@ export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="container footer-inner">
-        <a className="brand" href="#hero" aria-label="Gycide home">
+        <Link className="brand" to="/" aria-label="Gycide home">
           <span className="brand-mark">
             <FlaskConical size={16} strokeWidth={2.4} />
           </span>
           <span>gycide</span>
-        </a>
+        </Link>
 
         <div className="footer-links">
-          {links.map(link => (
+          {hashLinks.map(link => (
             <a key={link.href} href={link.href}>{link.label}</a>
           ))}
         </div>
