@@ -17,12 +17,12 @@ export default function Hero() {
           </p>
 
           <div className="hero-actions reveal reveal-delay-3">
-            <a href="#ai-lab" className="btn btn-primary">
+            <button type="button" className="btn btn-primary" onClick={() => document.getElementById('ai-lab')?.scrollIntoView({ behavior: 'smooth' })}>
               Open Binding Lab <ArrowRight size={16} />
-            </a>
-            <a href="#research" className="btn btn-outline">
+            </button>
+            <button type="button" className="btn btn-outline" onClick={() => document.getElementById('research')?.scrollIntoView({ behavior: 'smooth' })}>
               <BookOpen size={16} /> Review Evidence
-            </a>
+            </button>
           </div>
 
           <div className="hero-evidence reveal scroll-rise">

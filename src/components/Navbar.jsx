@@ -1,19 +1,20 @@
 import { useState, useEffect } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Sun, Moon, Menu, X, FlaskConical } from 'lucide-react'
 
-const links = [
-  { label: 'Problem', href: '#problem' },
-  { label: 'Research', href: '#research-areas' },
-  { label: 'Evidence', href: '#research' },
-  { label: 'Binding Lab', href: '#ai-lab' },
-  { label: 'Team', href: '#team' },
+const sections = [
+  { label: 'Problem', id: 'problem' },
+  { label: 'Research', id: 'research-areas' },
+  { label: 'Evidence', id: 'research' },
+  { label: 'Binding Lab', id: 'ai-lab' },
+  { label: 'Team', id: 'team' },
 ]
 
 export default function Navbar({ theme, toggleTheme }) {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
+  const navigate = useNavigate()
   const isHome = location.pathname === '/'
 
   useEffect(() => {
@@ -22,6 +23,18 @@ export default function Navbar({ theme, toggleTheme }) {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  const scrollToSection = (id) => {
+    setMenuOpen(false)
+    if (isHome) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/')
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    }
+  }
 
   return (
     <nav className={`site-nav ${scrolled ? 'is-scrolled' : ''}`}>
@@ -35,10 +48,15 @@ export default function Navbar({ theme, toggleTheme }) {
 
         <div className="nav-links">
           {isHome ? (
-            links.map(link => (
-              <a className="nav-link" key={link.href} href={link.href}>
-                {link.label}
-              </a>
+            sections.map(s => (
+              <button
+                type="button"
+                className="nav-link"
+                key={s.id}
+                onClick={() => scrollToSection(s.id)}
+              >
+                {s.label}
+              </button>
             ))
           ) : (
             <Link className="nav-link" to="/">Home</Link>
@@ -71,15 +89,15 @@ export default function Navbar({ theme, toggleTheme }) {
       {menuOpen && (
         <div className="container mobile-panel">
           {isHome ? (
-            links.map(link => (
-              <a
+            sections.map(s => (
+              <button
+                type="button"
                 className="nav-link"
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
+                key={s.id}
+                onClick={() => scrollToSection(s.id)}
               >
-                {link.label}
-              </a>
+                {s.label}
+              </button>
             ))
           ) : (
             <Link className="nav-link" to="/" onClick={() => setMenuOpen(false)}>Home</Link>

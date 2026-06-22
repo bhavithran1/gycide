@@ -1,15 +1,30 @@
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { ExternalLink, FlaskConical } from 'lucide-react'
 
-const hashLinks = [
-  { label: 'Problem', href: '#problem' },
-  { label: 'Research', href: '#research-areas' },
-  { label: 'Evidence', href: '#research' },
-  { label: 'Binding Lab', href: '#ai-lab' },
-  { label: 'Team', href: '#team' },
+const sections = [
+  { label: 'Problem', id: 'problem' },
+  { label: 'Research', id: 'research-areas' },
+  { label: 'Evidence', id: 'research' },
+  { label: 'Binding Lab', id: 'ai-lab' },
+  { label: 'Team', id: 'team' },
 ]
 
 export default function Footer() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const isHome = location.pathname === '/'
+
+  const scrollToSection = (id) => {
+    if (isHome) {
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      navigate('/')
+      setTimeout(() => {
+        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    }
+  }
+
   return (
     <footer className="site-footer">
       <div className="container footer-inner">
@@ -21,8 +36,10 @@ export default function Footer() {
         </Link>
 
         <div className="footer-links">
-          {hashLinks.map(link => (
-            <a key={link.href} href={link.href}>{link.label}</a>
+          {sections.map(s => (
+            <button type="button" key={s.id} onClick={() => scrollToSection(s.id)}>
+              {s.label}
+            </button>
           ))}
         </div>
 

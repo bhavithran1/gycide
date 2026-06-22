@@ -467,6 +467,11 @@ section {
   font-size: 14px;
   font-weight: 680;
   transition: color 0.18s ease, background-color 0.18s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  text-decoration: none;
 }
 
 .nav-link:hover {
@@ -1451,13 +1456,23 @@ section {
 }
 
 .footer-links a,
+.footer-links button,
 .footer-meta,
 .footer-meta a {
   color: var(--text-muted);
   font-size: 13px;
 }
 
+.footer-links button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
 .footer-links a:hover,
+.footer-links button:hover,
 .footer-meta a:hover {
   color: var(--accent-strong);
 }

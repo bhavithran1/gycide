@@ -14,6 +14,10 @@ import RNABiopesticide from './pages/RNABiopesticide'
 
 function HomePage() {
   useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  useEffect(() => {
     const items = Array.from(document.querySelectorAll('.reveal'))
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
